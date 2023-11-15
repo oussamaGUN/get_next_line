@@ -9,13 +9,9 @@
 #include <limits.h>
 
 char *get_next_line(int fd);
-size_t	ft_strlen(char *str);
 int ft_strchr(const char *s, char c);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-typedef struct s_list{
-    int index;
-}t_list;
+size_t	ft_strlen(char *str);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+char	*ft_strncat(char *dest, char *src, int nb);
 
 #endif
