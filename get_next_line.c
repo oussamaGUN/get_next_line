@@ -1,87 +1,127 @@
 #include "get_next_line.h"
 
-char *ft_line(char *buffer, int fd, char *line)
+
+char	*ft_new_line(char *s)
 {
-    int byts;
-    static char saved[OPEN_MAX];
+	char	*new_str;
+	int		i;
+	int		j;
 
-
-    byts = read(fd, buffer, BUFFER_SIZE);
-    if (byts == 0)
+	i = 0;
+	if (!s)
+		return (NULL);
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (!s[i])
+	{
+		free(s);
+		return (NULL);
+	}
+	i++;
+	new_str = malloc(sizeof(char) * ft_strlen(s) - i + 2);
+	if (!new_str)
+		return (NULL);
+	j = 0;
+	while (s[i])
     {
-        free(buffer);
-        return NULL;
-    }
-    ft_strncat(saved, buffer, byts);
-    while (ft_strchr(saved, '\n') == 0 && byts > 0)
-    {
-        byts = read(fd, buffer, BUFFER_SIZE);
-        if (byts <= 0)
-        {
-            free(buffer);
-            return NULL;
-        }
-        ft_strncat(saved, buffer, byts);
-    }
-    free(buffer);
-    int i = 0;
-    line = malloc(sizeof(char) * (ft_strlen(saved) + 1));
-    if (!line)
-        return NULL;
-    while (saved[i] != '\n' && saved[i])
-    {
-        line[i] = saved[i];
+		new_str[j] = s[i];
         i++;
+        j++;
     }
-    if (saved[i] != '\0')
-    {
-        line[i] = '\n';
-        line[i + 1] = '\0';
-    }
-    else
-        line[i] = '\0';
-    ft_memmove(saved, saved + i + 1, ft_strlen(saved) - i);
-    
-    return line;
+	new_str[j] = '\0';
+	free(s);
+	return (new_str);
 }
 
-char *get_next_line(int fd)
+char	*f_free(char *s)
 {
-    char *buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!buffer)
-        return NULL;
-    char *line = NULL;
-    if (fd <= -1 || fd == STDOUT_FILENO || fd == STDERR_FILENO || fd >= OPEN_MAX
-		|| read(fd, 0, 0) == -1 || BUFFER_SIZE <= 0)
-    {
-        free(buffer);
-        return (NULL);
-    }
-    line = ft_line(buffer, fd, line);
-    if (!line)
-        return NULL;
-    return line;
+	if (s[0] == '\0')
+	{
+		free(s);
+		return (NULL);
+	}
+	return (s);
 }
 
-
-/*int main(void)
+char	*ft_trim(char *s)
 {
-    int fd;
-    char *line;
+	int		i;
+	char	*string;
 
-    fd = open("file.txt", O_RDONLY);
-    if (!(line = (char *)malloc(sizeof(char*) * 10000)))
-        return (0);
+	i = 0;
+	if (!s)
+		return (NULL);
+	while (s[i] && s[i] != '\n')
+		i++;
+	string = malloc(sizeof(char) * (i + 2));
+	if (!string)
+		return (NULL);
+	i = 0;
+	while (s[i] && s[i] != '\n')
+	{
+		string[i] = s[i];
+		i++;
+	}
+	if (s[i] == '\n')
+	{
+		string[i] = '\n';
+		i++;
+	}
+	string[i] = '\0';
+	return (f_free(string));
+}
 
-    line = get_next_line(fd);
-    int i = 0;
-    while (i < 4)
+char	*ft_line(char *str, int fd)
+{
+	char	*buffer;
+	int		byts;
+
+	buffer = malloc(sizeof(char) * ((size_t)BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	byts = 1;
+	while (!ft_strchr(str, '\n') && byts != 0)
+	{
+		byts = read(fd, buffer, BUFFER_SIZE);
+		if (byts == -1)
+		{
+			free(str);
+			free(buffer);
+			return (NULL);
+		}
+		buffer[byts] = '\0';
+		str = ft_strjoin(str, buffer);
+	}
+	free(buffer);
+	return (str);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*saved;
+	char		*result;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
+	saved = ft_line(saved, fd);
+	result = ft_trim(saved);
+	saved = ft_new_line(saved);
+	return (result);
+}
+int main()
+{
+    int fd = open("file.txt", O_RDONLY);
+    if (fd == -1)
+        return 0;
+    char *l;
+    while (1)
     {
-        printf("%s\n", line);
-        free(line);
-        line = get_next_line(fd);
-        i++;
+        l = get_next_line(0);
+        if (!l)
+            break;
+        printf("%s", l);
+        free(l);
     }
-    free(line);
-    return(0);
-}*/
+
+    close(fd);
+}
