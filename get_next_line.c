@@ -1,5 +1,16 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ousabbar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 16:41:40 by ousabbar          #+#    #+#             */
+/*   Updated: 2023/11/18 16:41:45 by ousabbar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "get_next_line.h"
 
 char	*ft_new_line(char *s)
 {
@@ -23,11 +34,7 @@ char	*ft_new_line(char *s)
 		return (NULL);
 	j = 0;
 	while (s[i])
-    {
-		new_str[j] = s[i];
-        i++;
-        j++;
-    }
+		new_str[j++] = s[i++];
 	new_str[j] = '\0';
 	free(s);
 	return (new_str);
@@ -108,20 +115,20 @@ char	*get_next_line(int fd)
 	saved = ft_new_line(saved);
 	return (result);
 }
-int main()
-{
-    int fd = open("file.txt", O_RDONLY);
-    if (fd == -1)
-        return 0;
-    char *l;
-    while (1)
-    {
-        l = get_next_line(0);
-        if (!l)
-            break;
-        printf("%s", l);
-        free(l);
-    }
+// int main()
+// {
+//     int fd = open("file.txt", O_RDONLY);
+//     if (fd == -1)
+//         return 0;
+//     char *l;
+//     while (1)
+//     {
+//         l = get_next_line(0);
+//         if (!l)
+//             break;
+//         printf("%s", l);
+//         free(l);
+//     }
 
-    close(fd);
-}
+//     close(fd);
+// }

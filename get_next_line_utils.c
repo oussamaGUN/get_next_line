@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ousabbar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 16:41:52 by ousabbar          #+#    #+#             */
+/*   Updated: 2023/11/18 16:41:55 by ousabbar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_strlen(char *str)
@@ -9,19 +21,23 @@ size_t	ft_strlen(char *str)
 		i++;
 	return (i);
 }
-char *ft_strchr(char *s, char c)
+
+char	*ft_strchr(char *s, char c)
 {
-    int i = 0;
-    if (!s)
-        return (NULL);
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (NULL);
 	while (s[i])
 	{
 		if (s[i] == (char)c)
-			return s;
+			return (s);
 		i++;
 	}
 	return (NULL);
 }
+
 char	*ft_strjoin(char *s, char *buff)
 {
 	size_t	i;
@@ -38,11 +54,12 @@ char	*ft_strjoin(char *s, char *buff)
 	str = malloc(sizeof(char) * ((ft_strlen(s) + ft_strlen(buff)) + 1));
 	if (str == NULL)
 		return (NULL);
-	i = -1;
+	i = 0;
 	j = 0;
 	if (s)
-		while (s[++i] != '\0')
-			str[i] = s[i];
+		while (s[i] != '\0')
+			str[i++] = s[j++];
+	j = 0;
 	while (buff[j] != '\0')
 		str[i++] = buff[j++];
 	str[ft_strlen(s) + ft_strlen(buff)] = '\0';
