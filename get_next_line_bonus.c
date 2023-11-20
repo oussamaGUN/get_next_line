@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_new_line(char *s)
 {
@@ -105,13 +105,13 @@ char	*ft_line(char *str, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*saved;
+	static char	*saved[OPEN_MAX];
 	char		*result;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	saved = ft_line(saved, fd);
-	result = ft_trim(saved);
-	saved = ft_new_line(saved);
+	saved[fd] = ft_line(saved[fd], fd);
+	result = ft_trim(saved[fd]);
+	saved[fd] = ft_new_line(saved[fd]);
 	return (result);
 }
